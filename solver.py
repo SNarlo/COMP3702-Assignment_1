@@ -1,6 +1,10 @@
 #!/usr/bin/python
 import sys
 from laser_tank import LaserTankMap
+from queue import PriorityQueue
+
+
+
 
 """
 Template file for you to implement your solution to Assignment 1.
@@ -14,6 +18,24 @@ COMP3702 2020 Assignment 1 Support Code
 # Code for any classes or functions you need can go here.
 #
 #
+
+def h(p1, p2):
+    x1, y1 = p1
+    x2, y2 = p2
+    
+    return abs(x1 - x2)  + abs(y1-x2)
+
+def astar(filename, start, end):
+    count = 0
+    open_set = PriorityQueue()
+    open_set.put((0, count, start))
+    came_from = {}
+
+
+
+
+
+
 
 
 def write_output_file(filename, actions):
@@ -38,7 +60,14 @@ def main(arglist):
     # Read the input testcase file
     game_map = LaserTankMap.process_input_file(input_file)
 
+    print(game_map.apply_move(game_map.UP))
+
     actions = []
+
+
+
+
+
 
     #
     #
