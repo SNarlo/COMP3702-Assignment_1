@@ -91,7 +91,7 @@ class LaserTankMap:
                                ANTI_TANK_DOWN_SYMBOL, ANTI_TANK_RIGHT_SYMBOL, ANTI_TANK_DESTROYED_SYMBOL]
                        }
 
-    def __init__(self, x_size, y_size, grid_data, player_x=None, player_y=None, player_heading=None):
+    def __init__(self, x_size: object, y_size: object, grid_data: object, player_x: object = None, player_y: object = None, player_heading: object = None) -> object:
         """
         Build a LaserTank map instance from the given grid data.
         :param x_size: width of map

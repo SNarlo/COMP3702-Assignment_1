@@ -2,7 +2,7 @@
 import sys
 from laser_tank import LaserTankMap
 from queue import PriorityQueue
-
+import copy
 
 
 
@@ -18,28 +18,30 @@ COMP3702 2020 Assignment 1 Support Code
 # Code for any classes or functions you need can go here.
 #
 #
-input_file = "testcases/t1_bridgeport.txt" # TODO Change this back to arglist[0]
-output_file = "testcases/foo.txt"
 
-# Read the input testcase file
-game_map = LaserTankMap.process_input_file(input_file)
+"""
+This function copy's the game board 
+"""
+def get_copy(map):
+    new_map = copy.deepcopy(map)
+
+    return new_map
 
 """
 This function gets all the elements that are surrounding 
 the player in terms of U, D, L, R in the direction the tank is facing
 """
-def get_successors():
+def get_successors(gamemap):
 
-    y = [row[:] for row in game_map.grid_data]
-
+    map = get_copy(gamemap)
     successors = []
 
-    successors.append(y.grid_data[map.player_y - 1][map.player_x])
+    successors.append(map.grid_data[map.player_y - 1][map.player_x])
     successors.append(map.grid_data[map.player_y + 1][map.player_x])
     successors.append(map.grid_data[map.player_y][map.player_x + 1])
     successors.append(map.grid_data[map.player_y][map.player_x - 1])
 
-    return y
+    return successors
 
 
 def UCS(map, start, end):
@@ -72,8 +74,19 @@ def main(arglist):
 
     actions = []
 
+    new_grid_data = [row[:] for row in game_map.grid_data]
 
-    print(get_successors())
+    F = game_map.MOVE_FORWARD
+    L = game_map.TURN_LEFT
+    R = game_map.TURN_RIGHT
+    S = game_map.SHOOT_LASER
+
+    actions = [F, F, S, F, S, S, F, R, F, L, F, F, L, F, R, F]
+
+    for i in actions:
+        game_map.apply_move(i)
+        # game_map.render()
+        print(get_successors(get_copy(game_map)))
 
 
 
