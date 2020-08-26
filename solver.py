@@ -18,23 +18,33 @@ COMP3702 2020 Assignment 1 Support Code
 # Code for any classes or functions you need can go here.
 #
 #
+input_file = "testcases/t1_bridgeport.txt" # TODO Change this back to arglist[0]
+output_file = "testcases/foo.txt"
 
-def h(p1, p2):
-    x1, y1 = p1
-    x2, y2 = p2
-    
-    return abs(x1 - x2)  + abs(y1-x2)
+# Read the input testcase file
+game_map = LaserTankMap.process_input_file(input_file)
 
-def astar(filename, start, end):
-    count = 0
-    open_set = PriorityQueue()
-    open_set.put((0, count, start))
-    came_from = {}
+"""
+This function gets all the elements that are surrounding 
+the player in terms of U, D, L, R in the direction the tank is facing
+"""
+def get_successors():
+
+    y = [row[:] for row in game_map.grid_data]
+
+    successors = []
+
+    successors.append(y.grid_data[map.player_y - 1][map.player_x])
+    successors.append(map.grid_data[map.player_y + 1][map.player_x])
+    successors.append(map.grid_data[map.player_y][map.player_x + 1])
+    successors.append(map.grid_data[map.player_y][map.player_x - 1])
+
+    return y
 
 
+def UCS(map, start, end):
 
-
-
+    queue = PriorityQueue()
 
 
 
@@ -54,18 +64,16 @@ def write_output_file(filename, actions):
 
 
 def main(arglist):
-    input_file = arglist[0]
-    output_file = arglist[1]
+    input_file = "testcases/t1_bridgeport.txt" # TODO Change this back to arglist[0]
+    output_file = "testcases/foo.txt"
 
     # Read the input testcase file
     game_map = LaserTankMap.process_input_file(input_file)
 
-    print(game_map.apply_move(game_map.UP))
-
     actions = []
 
 
-
+    print(get_successors())
 
 
 
