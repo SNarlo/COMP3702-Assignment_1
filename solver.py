@@ -22,27 +22,25 @@ COMP3702 2020 Assignment 1 Support Code
 """
 This function copy's the game board 
 """
-def get_copy(map):
-    new_map = copy.deepcopy(map)
+def create_copy(current_state):
+    new_state = copy.deepcopy(current_state)
 
-    return new_map
+    return new_state
 
 """
 This function gets all the elements that are surrounding 
 the player in terms of U, D, L, R in the direction the tank is facing
 """
-def get_successors(gamemap):
+def get_successors(state):
 
-    map = get_copy(gamemap)
     successors = []
 
-    successors.append(map.grid_data[map.player_y - 1][map.player_x])
-    successors.append(map.grid_data[map.player_y + 1][map.player_x])
-    successors.append(map.grid_data[map.player_y][map.player_x + 1])
-    successors.append(map.grid_data[map.player_y][map.player_x - 1])
+    for action in state.MOVES:
+        new_state = create_copy(state)
+        new_state.apply_move(action)
+        successors.append(new_state)
 
     return successors
-
 
 def UCS(map, start, end):
 
@@ -73,21 +71,6 @@ def main(arglist):
     game_map = LaserTankMap.process_input_file(input_file)
 
     actions = []
-
-    new_grid_data = [row[:] for row in game_map.grid_data]
-
-    F = game_map.MOVE_FORWARD
-    L = game_map.TURN_LEFT
-    R = game_map.TURN_RIGHT
-    S = game_map.SHOOT_LASER
-
-    actions = [F, F, S, F, S, S, F, R, F, L, F, F, L, F, R, F]
-
-    for i in actions:
-        game_map.apply_move(i)
-        # game_map.render()
-        print(get_successors(get_copy(game_map)))
-
 
 
     #
