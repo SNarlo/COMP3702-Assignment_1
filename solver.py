@@ -35,14 +35,17 @@ def get_successors(state):
 
     successors = []
 
-    for action in state.MOVES:
+    for action in state.MOVES[1:]:
         new_state = create_copy(state)
         new_state.apply_move(action)
-        successors.append(new_state)
+        n = new_state.apply_move('f')
+        if n != 1:
+            successors.append(new_state)
 
     return successors
 
-def UCS(map, start, end):
+
+def astar(map, start, end):
 
     queue = PriorityQueue()
 
@@ -71,6 +74,10 @@ def main(arglist):
     game_map = LaserTankMap.process_input_file(input_file)
 
     actions = []
+
+    for i in get_successors(game_map):
+        i.render()
+
 
 
     #
