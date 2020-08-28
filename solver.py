@@ -108,10 +108,8 @@ def cost(state):
 
     return g_score
 
-
-def __lt__(state, other_state):
-    return state < other_state
-
+def __lt__(current, original):
+    return current < original
 
 def astar(state, start, end):
     """
@@ -134,7 +132,9 @@ def astar(state, start, end):
 
     while not queue.empty():
         current = queue.get()
-        if current == end:
+        current_pos = __get_player_pos(current)
+
+        if current_pos == end:
             log['no_vertex_in_queue_at_termination'] = queue.qsize()
             log['no_vertex_explored'] = len(explored)
             log['elapsed_time_in_minutes'] = (time.time()) - begin_clock/60
@@ -148,10 +148,12 @@ def astar(state, start, end):
                 log['no_vertex_explored'] += 1
                 vfp = cost_so_far + heuristic(neighbour, 'manhattan')
                 neighbour.value_for_property = vfp
+                print(log)
+                print(explored)
                 print(path)
+                #queue.put(neighbour)
 
-
-    # raise RuntimeError('No Solution')
+    #raise RuntimeError('No Solution')
 
 
 
@@ -184,8 +186,6 @@ def main(arglist):
 
 
     print(astar(game_map, __get_player_pos(game_map), __get_end_point(game_map)))
-
-
 
 
 
