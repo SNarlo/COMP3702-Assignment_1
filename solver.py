@@ -109,12 +109,11 @@ class Node(LaserTankMap):
         successors = []
 
         for action in self.state.MOVES:
-            cost = 0
             new_state = self.create_copy()
+            self.state = new_state
             n = new_state.apply_move(action)
-            cost += 1
             if n != self.state.COLLISION:
-                successors.append((Node(new_state), action, cost))
+                successors.append((Node(new_state), action))
 
         return successors
 
