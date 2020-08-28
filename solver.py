@@ -49,7 +49,7 @@ def get_successors(state):
         if new_state.cell_is_laser_movable(new_state.player_y, new_state.player_x, new_state.player_heading):
             new_state.apply_move('s')
         if n != 1:
-            successors.append(new_state)
+            successors.append((new_state, action))
 
     return successors
 
@@ -96,6 +96,7 @@ def heuristic(state, mode):
         raise NotImplementedError(mode)
     return h_score_estimate
 
+
 def cost(state):
     """
     This is the distance from the starting position
@@ -107,7 +108,12 @@ def cost(state):
 
     return g_score
 
-def astar(map, start, end):
+
+def __lt__(state, other_state):
+    return state < other_state
+
+
+def astar(state, start, end):
     """
     This is the implementation of the astar algorithm
     :param map: The map being played
@@ -119,10 +125,10 @@ def astar(map, start, end):
     log = dict()
     log['no_vertex_explored'] = 0
 
-    state = map
     queue = PriorityQueue()
-    queue.put(start)
-    explored = {state: cost(state)}
+    queue.put(state)
+    explored = {state: cost(state)} # a disctionary of vertex: g_score
+
     path = {state: []}
     log['no_vertex_explored'] += 1
 
@@ -132,6 +138,23 @@ def astar(map, start, end):
             log['no_vertex_in_queue_at_termination'] = queue.qsize()
             log['no_vertex_explored'] = len(explored)
             log['elapsed_time_in_minutes'] = (time.time()) - begin_clock/60
+            return log
+
+        for neighbour, action in get_successors(current):
+            cost_so_far = explored[current] + cost(neighbour)
+            if neighbour not in explored:
+                explored[current] = cost_so_far
+                path[neighbour] = path[current] + [action]
+                log['no_vertex_explored'] += 1
+                vfp = cost_so_far + heuristic(neighbour, 'manhattan')
+                neighbour.value_for_property = vfp
+                print(path)
+
+
+    # raise RuntimeError('No Solution')
+
+
+
 
 
 
@@ -160,7 +183,10 @@ def main(arglist):
     actions = []
 
 
-    print(game_map)
+    print(astar(game_map, __get_player_pos(game_map), __get_end_point(game_map)))
+
+
+
 
 
 
