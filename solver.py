@@ -42,14 +42,13 @@ def get_successors(state):
     """
     successors = []
 
-    for action in state.MOVES[1:4]:
+    for action in state.MOVES:
+        cost = 0
         new_state = create_copy(state)
-        new_state.apply_move(action)
-        n = new_state.apply_move('f')
-        if new_state.cell_is_laser_movable(new_state.player_y, new_state.player_x, new_state.player_heading):
-            new_state.apply_move('s')
+        n = new_state.apply_move(action)
+        cost += 1
         if n != 1:
-            successors.append((new_state, action))
+            successors.append((new_state, action, cost))
 
     return successors
 
@@ -124,7 +123,8 @@ def astar(state, start, end):
     log['no_vertex_explored'] = 0
 
     queue = PriorityQueue()
-    queue.put(state)
+    f_score = heuristic(state, 'manhattan')
+    queue.put((f_score, state))
     explored = {state: cost(state)} # a disctionary of vertex: g_score
 
     path = {state: []}
@@ -132,7 +132,8 @@ def astar(state, start, end):
 
     while not queue.empty():
         current = queue.get()
-        current_pos = __get_player_pos(current)
+        print(current[1])
+        current_pos = __get_player_pos(current[1])
 
         if current_pos == end:
             log['no_vertex_in_queue_at_termination'] = queue.qsize()
@@ -140,20 +141,17 @@ def astar(state, start, end):
             log['elapsed_time_in_minutes'] = (time.time()) - begin_clock/60
             return log
 
-        for neighbour, action in get_successors(current):
-            cost_so_far = explored[current] + cost(neighbour)
+        for neighbour, action, cost in get_successors(current[1]):
+            cost_so_far = explored[current[1]] + [cost]
             if neighbour not in explored:
-                explored[current] = cost_so_far
-                path[neighbour] = path[current] + [action]
+                explored[current[1]] = [cost]
+                path[neighbour] = path[current[1]] + [action]
                 log['no_vertex_explored'] += 1
                 vfp = cost_so_far + heuristic(neighbour, 'manhattan')
                 neighbour.value_for_property = vfp
-                print(log)
-                print(explored)
-                print(path)
-                #queue.put(neighbour)
+                print(queue.put(vfp, neighbour))
 
-    #raise RuntimeError('No Solution')
+    raise RuntimeError('No Solution')
 
 
 
