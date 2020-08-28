@@ -26,132 +26,142 @@ output_file = "testcases/foo.txt"
 game_map = LaserTankMap.process_input_file(input_file)
 
 
-def create_copy(current_state):
-    """
-    This function copy's the game board
-    """
-    new_state = copy.deepcopy(current_state)
+class Node(LaserTankMap):
 
-    return new_state
-
-
-def get_successors(state):
-    """
-    This function gets all the elements that are surrounding
-    the player in terms of U, D, L, R in the direction the tank is facing
-    """
-    successors = []
-
-    for action in state.MOVES:
-        cost = 0
-        new_state = create_copy(state)
-        n = new_state.apply_move(action)
-        cost += 1
-        if n != 1:
-            successors.append((new_state, action, cost))
-
-    return successors
+    def __init__(self, state):
+        self.state = state
+        self.g_score = self.get_g_score
+        self.h_score = self.heuristic
+        self.end_point = self.__get_end_point()
+        self._start_point = (game_map.player_y, game_map.player_x)
+        self.pos = self.__get_player_pos()
+        self.successors = self.get_successors
+        self.player_heading = state.player_heading
+        super().__init__(x_size=state.x_size, y_size=state.y_size, grid_data=state.grid_data,
+                         player_heading=state.player_heading, player_x=state.player_x, player_y=state.player_y)
 
 
-def __get_end_point(state):
-    """
-    :return: the index [y][x] of the flag point
-    """
 
-    length = len(state.grid_data)
-    width = len(state.grid_data[0])
-    expanded = []
-    index = 0
-    while index < len(state.grid_data[0]):
-        for i in state.grid_data:
-            expanded.append(i[index])
-        index += 1
+    def __get_end_point(self):
+        """
+        :return: the index [y][x] of the flag point
+        """
 
-    index = expanded.index('F')
+        length = len(self.state.grid_data)
+        width = len(self.state.grid_data[0])
+        expanded = []
+        index = 0
+        while index < len(self.state.grid_data[0]):
+            for i in self.state.grid_data:
+                expanded.append(i[index])
+            index += 1
 
-    return index % length, index % width
+        index = expanded.index('F')
 
+        return index % length, index % width
 
-def __get_player_pos(state):
-    """
-    A function which returns the current position of the player
-    :param state: The current state (map)
-    :return: The players coordinates [y][x]
-    """
-    return state.player_y, state.player_x
-
-
-def heuristic(state, mode):
-    """
-    The heuristic function
-    :param state: The game state
-    :param mode: The type of heuristic implemented
-    :return: The estimated distance between the tank and the goal
-    """
-    if mode == 'manhattan':
-        h_score_estimate = abs(__get_end_point(state)[0] - __get_player_pos(state)[0])
-        h_score_estimate += abs(__get_end_point(state)[1] - __get_player_pos(state)[1])
-    else:
-        raise NotImplementedError(mode)
-    return h_score_estimate
+    def __get_player_pos(self):
+        """
+        A function which returns the current position of the player
+        :return: The players coordinates [y][x]
+        """
+        return self.state.player_y, self.state.player_y
 
 
-def cost(state):
-    """
-    This is the distance from the starting position
-    :param state: The current state the map is in
-    :return: The distance from the start position
-    """
-    g_score = abs(__get_player_pos(state)[0] - game_map.player_y)
-    g_score += abs(__get_player_pos(state)[1] - game_map.player_x)
+    def heuristic(self, mode):
+        """
+        The heuristic function
+        :param state: The game state
+        :param mode: The type of heuristic implemented
+        :return: The estimated distance between the tank and the goal
+        """
+        if mode == 'manhattan':
+            h_score_estimate = abs(self.end_point[0] - self.pos[0])
+            h_score_estimate += abs(self.end_point[1] - self.pos[1])
+        else:
+            raise NotImplementedError(mode)
+        return h_score_estimate
 
-    return g_score
+    def get_g_score(self):
+        """
+        This is the distance from the starting position
+        :param state: The current state the map is in
+        :return: The distance from the start position
+        """
+        g_score = abs(self.pos[0] - game_map.player_y)
+        g_score += abs(self.pos[1] - game_map.player_x)
 
-def __lt__(current, original):
-    return current < original
+        return g_score
 
-def astar(state, start, end):
-    """
-    This is the implementation of the astar algorithm
-    :param map: The map being played
-    :param start: The player's start position
-    :param end: The end goal position
-    :return:
-    """
-    begin_clock = time.time()
-    log = dict()
-    log['no_vertex_explored'] = 0
+    def create_copy(self):
+        """
+        This function copy's the game board
+        """
+        new_state = copy.deepcopy(self.state)
 
-    queue = PriorityQueue()
-    f_score = heuristic(state, 'manhattan')
-    queue.put((f_score, state))
-    explored = {state: cost(state)} # a disctionary of vertex: g_score
+        return new_state
 
-    path = {state: []}
-    log['no_vertex_explored'] += 1
+    def get_successors(self):
+        """
+        This function gets all the elements that are surrounding
+        the player in terms of U, D, L, R in the direction the tank is facing
+        """
+        successors = []
 
-    while not queue.empty():
-        current = queue.get()
-        print(current[1])
-        current_pos = __get_player_pos(current[1])
+        for action in self.state.MOVES:
+            cost = 0
+            new_state = self.create_copy()
+            n = new_state.apply_move(action)
+            cost += 1
+            if n != self.state.COLLISION:
+                successors.append((Node(new_state), action, cost))
 
-        if current_pos == end:
-            log['no_vertex_in_queue_at_termination'] = queue.qsize()
-            log['no_vertex_explored'] = len(explored)
-            log['elapsed_time_in_minutes'] = (time.time()) - begin_clock/60
-            return log
+        return successors
 
-        for neighbour, action, cost in get_successors(current[1]):
-            cost_so_far = explored[current[1]] + [cost]
-            if neighbour not in explored:
-                explored[current[1]] = [cost]
-                path[neighbour] = path[current[1]] + [action]
-                log['no_vertex_explored'] += 1
-                vfp = cost_so_far + heuristic(neighbour, 'manhattan')
-                neighbour.value_for_property = vfp
-                print(queue.put(vfp, neighbour))
 
-    raise RuntimeError('No Solution')
+
+# def astar(Node, start, end):
+#     """
+#     This is the implementation of the astar algorithm
+#     :param map: The map being played
+#     :param start: The player's start position
+#     :param end: The end goal position
+#     :return:
+#     """
+#     begin_clock = time.time()
+#     log = dict()
+#     log['no_vertex_explored'] = 0
+#
+#     queue = PriorityQueue()
+#     f_score = heuristic(state, 'manhattan')
+#     queue.put((f_score, state))
+#     explored = {state: cost(state)} # a disctionary of vertex: g_score
+#
+#     path = {state: []}
+#     log['no_vertex_explored'] += 1
+#
+#     while not queue.empty():
+#         current = queue.get()
+#         print(current[1])
+#         current_pos = __get_player_pos(current[1])
+#
+#         if current_pos == end:
+#             log['no_vertex_in_queue_at_termination'] = queue.qsize()
+#             log['no_vertex_explored'] = len(explored)
+#             log['elapsed_time_in_minutes'] = (time.time()) - begin_clock/60
+#             return log
+#
+#         for neighbour, action, cost in get_successors(current[1]):
+#             cost_so_far = explored[current[1]] + [cost]
+#             if neighbour not in explored:
+#                 explored[current[1]] = [cost]
+#                 path[neighbour] = path[current[1]] + [action]
+#                 log['no_vertex_explored'] += 1
+#                 vfp = cost_so_far + heuristic(neighbour, 'manhattan')
+#                 neighbour.value_for_property = vfp
+#                 print(queue.put(vfp, neighbour))
+#
+#     raise RuntimeError('No Solution')
 
 
 
@@ -183,10 +193,16 @@ def main(arglist):
     actions = []
 
 
-    print(astar(game_map, __get_player_pos(game_map), __get_end_point(game_map)))
+    a = Node(game_map)
 
+    node_list = []
+    for i in a.get_successors():
+        h = i[0].get_successors()
+        node_list.append(h)
 
-
+    for j in node_list:
+        for s in j:
+            s[0].render()
 
 
 
