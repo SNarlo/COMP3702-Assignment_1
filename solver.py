@@ -43,6 +43,7 @@ class Node(LaserTankMap):
 
 
 
+
     def __get_end_point(self):
         """
         :return: the index [y][x] of the flag point
@@ -117,55 +118,59 @@ class Node(LaserTankMap):
             new_state = self.create_copy()
             self.state = new_state
             n = new_state.apply_move(action)
-            if n != self.state.COLLISION:
-                successors.append((Node(new_state), action))
+            successors.append((Node(new_state), action))
 
         return successors
 
+    def __lt__(self, other):
+        return self.f_score < other.f_score
 
 
-# def astar(Node, start, end):
-#     """
-#     This is the implementation of the astar algorithm
-#     :param map: The map being played
-#     :param start: The player's start position
-#     :param end: The end goal position
-#     :return:
-#     """
-#     begin_clock = time.time()
-#     log = dict()
-#     log['no_vertex_explored'] = 0
-#
-#     queue = PriorityQueue()
-#     f_score = heuristic(state, 'manhattan')
-#     queue.put((f_score, state))
-#     explored = {state: cost(state)} # a disctionary of vertex: g_score
-#
-#     path = {state: []}
-#     log['no_vertex_explored'] += 1
-#
-#     while not queue.empty():
-#         current = queue.get()
-#         print(current[1])
-#         current_pos = __get_player_pos(current[1])
-#
-#         if current_pos == end:
-#             log['no_vertex_in_queue_at_termination'] = queue.qsize()
-#             log['no_vertex_explored'] = len(explored)
-#             log['elapsed_time_in_minutes'] = (time.time()) - begin_clock/60
-#             return log
-#
-#         for neighbour, action, cost in get_successors(current[1]):
-#             cost_so_far = explored[current[1]] + [cost]
-#             if neighbour not in explored:
-#                 explored[current[1]] = [cost]
-#                 path[neighbour] = path[current[1]] + [action]
-#                 log['no_vertex_explored'] += 1
-#                 vfp = cost_so_far + heuristic(neighbour, 'manhattan')
-#                 neighbour.value_for_property = vfp
-#                 print(queue.put(vfp, neighbour))
-#
-#     raise RuntimeError('No Solution')
+class Goal(Node):
+    def __init__(self, state):
+        self.state = state
+        super().__init__(state= state)
+        self.pos = self.end_point
+
+
+def astar(start, end):
+    """
+    This is the implementation of the astar algorithm
+    :param node: The map being played
+    :param start: The player's start position
+    :param end: The end goal position
+    :return:
+    """
+    begin_clock = time.time()
+    log = dict()
+    log['no_vertex_explored'] = 0
+
+    queue = PriorityQueue()
+    queue.put(start)
+    explored = {start: start.f_score} # a disctionary of vertex: f_score
+    path = {start: []}
+    log['no_vertex_explored'] += 1
+
+    while not queue.empty():
+        current = queue.get()
+        if current.pos == end.pos:
+            log['no_vertex_in_queue_at_termination'] = queue.qsize()
+            log['no_vertex_explored'] = len(explored)
+            log['elapsed_time_in_minutes'] = (time.time()) - begin_clock/60
+            return log
+
+        for neighbour, action in current.get_successors():  # iterating over all the neighbors of the current node
+            if neighbour not in explored:
+                explored[neighbour] = current.f_score
+                path[neighbour] = path[current] + [action]
+                neighbour.render()
+                log['no_vertex_explored'] += 1
+                queue.put(neighbour)
+
+
+
+
+    raise RuntimeError('No Solution')
 
 
 
@@ -197,16 +202,12 @@ def main(arglist):
     actions = []
 
 
-    a = Node(game_map)
+    start = Node(game_map)
+    end = Goal(start)
 
-    node_list = []
-    for i in a.get_successors():
-        h = i[0].get_successors()
-        node_list.append(h)
 
-    for j in node_list:
-        for s in j:
-            print(s[0].render())
+
+    print(astar(start, end))
 
 
 
