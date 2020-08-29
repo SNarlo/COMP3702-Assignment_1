@@ -30,13 +30,14 @@ class Node(LaserTankMap):
 
     def __init__(self, state):
         self.state = state
-        self.g_score = self.get_g_score
-        self.h_score = self.heuristic
-        self.end_point = self.__get_end_point()
         self._start_point = (game_map.player_y, game_map.player_x)
+        self.end_point = self.__get_end_point()
         self.pos = self.__get_player_pos()
         self.successors = self.get_successors
         self.player_heading = state.player_heading
+        self.g_score = self.get_g_score()
+        self.h_score = self.heuristic('manhattan')
+        self.f_score = self.get_f_score()
         super().__init__(x_size=state.x_size, y_size=state.y_size, grid_data=state.grid_data,
                          player_heading=state.player_heading, player_x=state.player_x, player_y=state.player_y)
 
@@ -65,7 +66,7 @@ class Node(LaserTankMap):
         A function which returns the current position of the player
         :return: The players coordinates [y][x]
         """
-        return self.state.player_y, self.state.player_y
+        return self.state.player_y, self.state.player_x
 
 
     def heuristic(self, mode):
@@ -92,6 +93,10 @@ class Node(LaserTankMap):
         g_score += abs(self.pos[1] - game_map.player_x)
 
         return g_score
+
+    def get_f_score(self):
+
+        return self.g_score + self.h_score
 
     def create_copy(self):
         """
@@ -201,7 +206,7 @@ def main(arglist):
 
     for j in node_list:
         for s in j:
-            s[0].render()
+            print(s[0].render())
 
 
 
