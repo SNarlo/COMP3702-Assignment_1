@@ -2,9 +2,9 @@
 3.5
 ########
 #TIIF###
-##WWWW##
-#WWWWWW#
-#WTWW W#
+##WW W##
+#WWW WW#
+#WTW  W#
 ####   #
 ####   #
 ##### ##

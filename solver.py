@@ -43,7 +43,6 @@ class Node(LaserTankMap):
 
 
 
-
     def __get_end_point(self):
         """
         :return: the index [y][x] of the flag point
@@ -118,7 +117,8 @@ class Node(LaserTankMap):
             new_state = self.create_copy()
             self.state = new_state
             n = new_state.apply_move(action)
-            successors.append((Node(new_state), action))
+            if n != self.state.COLLISION:
+                successors.append((Node(new_state), action))
 
         return successors
 
@@ -147,7 +147,7 @@ def astar(start, end):
 
     queue = PriorityQueue()
     queue.put(start)
-    explored = {start: start.f_score} # a disctionary of vertex: f_score
+    explored = {start: start.h_score} # a disctionary of vertex: f_score
     path = {start: []}
     log['no_vertex_explored'] += 1
 
@@ -161,14 +161,11 @@ def astar(start, end):
 
         for neighbour, action in current.get_successors():  # iterating over all the neighbors of the current node
             if neighbour not in explored:
-                explored[neighbour] = current.f_score
+                explored[neighbour] = current.h_score
                 path[neighbour] = path[current] + [action]
-                neighbour.render()
                 log['no_vertex_explored'] += 1
                 queue.put(neighbour)
-
-
-
+                print(explored)
 
     raise RuntimeError('No Solution')
 
@@ -203,12 +200,19 @@ def main(arglist):
 
 
     start = Node(game_map)
-    end = Goal(start)
-
-
+    end = Goal(game_map)
 
     print(astar(start, end))
 
+    #
+    # node_list = []
+    # for i in start.get_successors():
+    #     h = i[0].get_successors()
+    #     node_list.append(h)
+    #
+    # for j in node_list:
+    #     for s in j:
+    #         print(s[0].h_score)
 
 
 
@@ -229,4 +233,3 @@ def main(arglist):
 
 if __name__ == '__main__':
     main(sys.argv[1:])
-
