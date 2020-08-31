@@ -2,10 +2,10 @@
 3.5
 ########
 #TIIF ##
-##WW W##
-#WWW WW#
-#WT   W#
-##     #
+##WWW ##
+#WWWW W#
+#WTW  W#
+##WWWWW#
 ####   #
 ##### ##
 # B BB##

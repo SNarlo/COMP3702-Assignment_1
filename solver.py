@@ -35,7 +35,7 @@ class Node(LaserTankMap):
         self.pos = self.__get_player_pos()
         self.successors = self.get_successors
         self.player_heading = state.player_heading
-        self.g_score = self.get_g_score()
+        self.g_score = 0
         self.h_score = self.heuristic('manhattan')
         self.f_score = 0
         self.id = hash(self)
@@ -127,7 +127,7 @@ class Node(LaserTankMap):
         return successors
 
     def __lt__(self, other):
-        return other.h_score > self.h_score
+        return self.h_score < other.h_score
 
 
 
@@ -163,29 +163,49 @@ def astar(start, end):
             log['no_vertex_in_queue_at_termination'] = queue.qsize()
             log['no_vertex_explored'] = len(explored)
             log['action_path'] = path[current.id]
+            log['path_length'] = len(path[current.id])
             log['solution_path'] = explored[current.id]
             log['elapsed_time_in_minutes'] = (time.time()) - begin_clock / 60
             return log
 
         for neighbour, action in current.get_successors():  # getting all the neighbours of the current node
-            cost_so_far = explored[current.id] + current.g_score# updating the cost so far to be the total of all the nodes explored
+            neighbour.g_score = current.g_score + 1
+            cost_so_far = explored[current.id] + current.g_score # updating the cost so far to be the total of all the nodes explored
 
             if (neighbour.id not in explored) or (cost_so_far < explored[neighbour.id]): # if the neighbour is not in explored or if the total g score is less than the neighbors g_score
-                explored[neighbour.id] = cost_so_far # add it and make its cost to be the total cost so far
+                explored[neighbour.id] = cost_so_far  # add it and make its cost to be the total cost so far
                 path[neighbour.id] = path[current.id] + [action] # update the path
                 log['no_vertex_explored'] += 1 # add vertex to the total
-                vfp = cost_so_far + current.h_score
-                neighbour.f_score = vfp
+                neighbour.f_score = cost_so_far + current.h_score
                 queue.put(neighbour)
-                print(current.g_score, current.h_score, current.f_score)
-
 
     raise RuntimeError('No Solution')
 
 
-# def ucs():
+def ucs(start, goal):
 
-# ['s', 'f', 'r', 'l', 's', 'f', 'l', 'r', 'r', 'l', 's', 'l', 'r', 'f', 'l', 'r', 'l', 'f', 'r', 'f', 'f', 'f', 'f', 'f']
+    fringe = PriorityQueue()
+    fringe.put(start)
+    explored = []
+
+    while not fringe.empty():
+        node = fringe.get()
+        node.render()
+
+        if node.pos == goal.pos:
+            return "Success!"
+
+        for neighbour in node.get_successors():
+            if neighbour and neighbour not in explored:
+                fringe.put(neighbour)
+
+
+
+
+
+
+
+
 
 
 def write_output_file(filename, actions):
