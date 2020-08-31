@@ -170,7 +170,7 @@ def astar(start, end):
         for neighbour, action in current.get_successors():  # getting all the neighbours of the current node
             cost_so_far = explored[current.id] + current.g_score# updating the cost so far to be the total of all the nodes explored
 
-            if (neighbour.id not in explored) or (cost_so_far < explored[neighbour.id]): # if the neighbour is not in explored or if the total g score is less than the neighbors g_score
+            if (neighbour.id not in explored) or (cost_so_far > explored[neighbour.id]): # if the neighbour is not in explored or if the total g score is less than the neighbors g_score
                 explored[neighbour.id] = cost_so_far # add it and make its cost to be the total cost so far
                 path[neighbour.id] = path[current.id] + [action] # update the path
                 log['no_vertex_explored'] += 1 # add vertex to the total
