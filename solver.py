@@ -37,7 +37,8 @@ class Node(LaserTankMap):
         self.player_heading = state.player_heading
         self.g_score = self.get_g_score()
         self.h_score = self.heuristic('manhattan')
-        self.f_score = self.get_f_score()
+        self.f_score = 0
+        self.id = hash(self)
         super().__init__(x_size=state.x_size, y_size=state.y_size, grid_data=state.grid_data,
                          player_heading=state.player_heading, player_x=state.player_x, player_y=state.player_y)
 
@@ -59,7 +60,7 @@ class Node(LaserTankMap):
 
         index = expanded.index('F')
 
-        return index % length, index % width
+        return index % length, index % width - 1
 
     def __get_player_pos(self):
         """
@@ -94,15 +95,18 @@ class Node(LaserTankMap):
 
         return g_score
 
-    def get_f_score(self):
-
-        return self.g_score + self.h_score
+    # def get_f_score(self):
+    #
+    #     return self.g_score + self.h_score
 
     def create_copy(self):
         """
         This function copy's the game board
         """
-        new_state = copy.deepcopy(self.state)
+        new_map = [row[:] for row in self.grid_data]
+
+        new_state = LaserTankMap(x_size=self.x_size, y_size=self.y_size, grid_data=new_map, player_x=self.player_x,
+                                 player_y=self.player_y, player_heading=self.player_heading)
 
         return new_state
 
@@ -117,19 +121,21 @@ class Node(LaserTankMap):
             new_state = self.create_copy()
             self.state = new_state
             n = new_state.apply_move(action)
-            if n != self.state.COLLISION:
+            if n == self.SUCCESS:
                 successors.append((Node(new_state), action))
 
         return successors
 
     def __lt__(self, other):
-        return self.f_score < other.f_score
+        return self.g_score > other.g_score
+
+
 
 
 class Goal(Node):
     def __init__(self, state):
         self.state = state
-        super().__init__(state= state)
+        super().__init__(state=state)
         self.pos = self.end_point
 
 
@@ -147,8 +153,8 @@ def astar(start, end):
 
     queue = PriorityQueue()
     queue.put(start)
-    explored = {start: start.h_score} # a disctionary of vertex: f_score
-    path = {start: []}
+    explored = {start.id: start.g_score} # a disctionary of vertex: f_score
+    path = {start.id: []}
     log['no_vertex_explored'] += 1
 
     while not queue.empty():
@@ -156,20 +162,28 @@ def astar(start, end):
         if current.pos == end.pos:
             log['no_vertex_in_queue_at_termination'] = queue.qsize()
             log['no_vertex_explored'] = len(explored)
-            log['elapsed_time_in_minutes'] = (time.time()) - begin_clock/60
+            log['action_path'] = path[current.id]
+            log['solution_path'] = explored[current.id]
+            log['elapsed_time_in_minutes'] = (time.time()) - begin_clock / 60
             return log
 
-        for neighbour, action in current.get_successors():  # iterating over all the neighbors of the current node
-            if neighbour not in explored:
-                explored[neighbour] = current.h_score
-                path[neighbour] = path[current] + [action]
-                log['no_vertex_explored'] += 1
+        for neighbour, action in current.get_successors():  # getting all the neighbours of the current node
+            cost_so_far = explored[current.id] + current.g_score# updating the cost so far to be the total of all the nodes explored
+
+            if (neighbour.id not in explored) or (cost_so_far < explored[neighbour.id]): # if the neighbour is not in explored or if the total g score is less than the neighbors g_score
+                explored[neighbour.id] = cost_so_far # add it and make its cost to be the total cost so far
+                path[neighbour.id] = path[current.id] + [action] # update the path
+                log['no_vertex_explored'] += 1 # add vertex to the total
+
+                vfp = cost_so_far + current.h_score
+                neighbour.f_score = vfp
                 queue.put(neighbour)
-                print(explored)
+
 
     raise RuntimeError('No Solution')
 
 
+# def ucs():
 
 
 
