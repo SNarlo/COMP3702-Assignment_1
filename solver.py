@@ -20,7 +20,7 @@ COMP3702 2020 Assignment 1 Support Code
 # Code for any classes or functions you need can go here.
 #
 #
-input_file = "testcases/t1_bridgeport.txt" # TODO Change this back to arglist[0]
+input_file = "testcases/t0_simple_maze.txt" # TODO Change this back to arglist[0]
 output_file = "testcases/foo.txt"
 
 # Read the input testcase file
@@ -61,7 +61,7 @@ class Node(LaserTankMap):
 
         index = expanded.index('F')
 
-        return index % length, index % width - 1
+        return index % length, index % width
 
     def __get_player_pos(self):
         """
@@ -124,11 +124,11 @@ class Node(LaserTankMap):
 
         return successors
 
-    # def __lt__(self, other):
-    #     return self.g_score < other.g_score
+    def __lt__(self, other):
+        return self.h_score < other.h_score
 
-    def __eq__(self, other):
-        return self.id == other.id
+    # def __eq__(self, other):
+    #     return self.id == other.id
 
 
 class Goal(Node):
@@ -169,14 +169,14 @@ def astar(start, end):
 
         for neighbour, action in current.get_successors():  # getting all the neighbours of the current node
             neighbour.g_score = current.g_score + 1
+            cost_so_far = explored[current.id] + current.g_score # updating the cost so far to be the total of all the nodes explored
 
-            if (neighbour.id not in explored) or (neighbour.g_score < explored[neighbour.id]): # if the neighbour is not in explored or if the total g score is less than the neighbors g_score
-                explored[neighbour.id] = neighbour.g_score  # add it and make its cost to be the total cost so far
+            if (neighbour.id not in explored) or (cost_so_far < explored[neighbour.id]): # if the neighbour is not in explored or if the total g score is less than the neighbors g_score
+                explored[neighbour.id] = cost_so_far  # add it and make its cost to be the total cost so far
                 path[neighbour.id] = path[current.id] + [action] # update the path
                 log['no_vertex_explored'] += 1 # add vertex to the total
-                neighbour.f_score = neighbour.g_score + neighbour.h_score
+                neighbour.f_score = cost_so_far + neighbour.h_score
                 queue.put(neighbour)
-                neighbour.render()
 
 
     raise RuntimeError('No Solution')
@@ -185,26 +185,28 @@ def astar(start, end):
 def ucs(start, goal):
     log = dict()
     log['nvextex_explored_(with_duplicates)'] = 0
+    path = {start.id: []}
     visited = set()
     fringe = queuelib.Queue()
     fringe.put((start, start.g_score))
 
     while not fringe.empty():
         node, cost = fringe.get()
+        
+        visited.add(node)
 
         if node.pos == goal.pos:
-            log['nvertex_in_fringe_at_termination'] = fringe.qsize()
-            log['nvextex_explored'] = len(visited)
+            log['path_length'] = len(path[node.id])
+            log['action_path'] = path[node.id]
             return log
 
-        visited.add(node.id)
-        node.render()
-
         for n, action in node.get_successors():
-            if n.id not in visited or n.id not in fringe:
+            if n.id not in visited or node.id not in fringe:
                 log['nvextex_explored_(with_duplicates)'] += 1
+                path[n.id] = path[node.id] + [action]
                 total_cost = cost + n.g_score + 1
                 fringe.put((n, total_cost))
+
 
     raise RuntimeError('No solution!')
 
@@ -228,7 +230,7 @@ def write_output_file(filename, actions):
 
 
 def main(arglist):
-    input_file = "testcases/t1_bridgeport.txt" # TODO Change this back to arglist[0]
+    input_file = "testcases/t0_simple_maze.txt" # TODO Change this back to arglist[0]
     output_file = "testcases/foo.txt"
 
     # Read the input testcase file
