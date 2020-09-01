@@ -5,6 +5,7 @@ from queue import PriorityQueue
 import copy
 import time
 import queue as queuelib
+import math
 
 
 
@@ -61,7 +62,8 @@ class Node(LaserTankMap):
 
         index = expanded.index('F')
 
-        return index % length, index % width
+
+        return index % length, math.floor(index/width)
 
     def __get_player_pos(self):
         """
@@ -199,6 +201,8 @@ def ucs(start, goal):
             log['path_length'] = len(path[node.id])
             log['action_path'] = path[node.id]
             return log
+
+        print(node.pos, goal.pos)
 
         for n, action in node.get_successors():
             if n.id not in visited or node.id not in fringe:
