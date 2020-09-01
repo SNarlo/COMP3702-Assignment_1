@@ -4,6 +4,7 @@ from laser_tank import LaserTankMap
 from queue import PriorityQueue
 import copy
 import time
+import queue as queuelib
 
 
 
@@ -35,10 +36,10 @@ class Node(LaserTankMap):
         self.pos = self.__get_player_pos()
         self.successors = self.get_successors
         self.player_heading = state.player_heading
-        self.g_score = 0
+        self.g_score = self.get_g_score()
         self.h_score = self.heuristic('manhattan')
         self.f_score = 0
-        self.id = hash(self)
+        self.id = self.state
         super().__init__(x_size=state.x_size, y_size=state.y_size, grid_data=state.grid_data,
                          player_heading=state.player_heading, player_x=state.player_x, player_y=state.player_y)
 
@@ -95,9 +96,6 @@ class Node(LaserTankMap):
 
         return g_score
 
-    # def get_f_score(self):
-    #
-    #     return self.g_score + self.h_score
 
     def create_copy(self):
         """
@@ -126,10 +124,11 @@ class Node(LaserTankMap):
 
         return successors
 
-    def __lt__(self, other):
-        return self.h_score < other.h_score
+    # def __lt__(self, other):
+    #     return self.g_score < other.g_score
 
-
+    def __eq__(self, other):
+        return self.id == other.id
 
 
 class Goal(Node):
@@ -170,39 +169,44 @@ def astar(start, end):
 
         for neighbour, action in current.get_successors():  # getting all the neighbours of the current node
             neighbour.g_score = current.g_score + 1
-            cost_so_far = explored[current.id] + current.g_score # updating the cost so far to be the total of all the nodes explored
 
-            if (neighbour.id not in explored) or (cost_so_far < explored[neighbour.id]): # if the neighbour is not in explored or if the total g score is less than the neighbors g_score
-                explored[neighbour.id] = cost_so_far  # add it and make its cost to be the total cost so far
+            if (neighbour.id not in explored) or (neighbour.g_score < explored[neighbour.id]): # if the neighbour is not in explored or if the total g score is less than the neighbors g_score
+                explored[neighbour.id] = neighbour.g_score  # add it and make its cost to be the total cost so far
                 path[neighbour.id] = path[current.id] + [action] # update the path
                 log['no_vertex_explored'] += 1 # add vertex to the total
-                neighbour.f_score = cost_so_far + current.h_score
+                neighbour.f_score = neighbour.g_score + neighbour.h_score
                 queue.put(neighbour)
+                neighbour.render()
+
 
     raise RuntimeError('No Solution')
 
 
 def ucs(start, goal):
 
-    fringe = PriorityQueue()
-    fringe.put(start)
-    explored = []
+
+    log = dict()
+    log['nvextex_explored_(with_duplicates)'] = 0
+    visited = set()
+    fringe = queuelib.Queue()
+    fringe.put((start, start.g_score))
 
     while not fringe.empty():
-        node = fringe.get()
-        node.render()
+        node, cost = fringe.get()
 
         if node.pos == goal.pos:
-            return "Success!"
+            log['nvertex_in_fringe_at_termination'] = fringe.qsize()
+            log['nvextex_explored'] = len(visited)
+            return log
 
-        for neighbour in node.get_successors():
-            if neighbour and neighbour not in explored:
-                fringe.put(neighbour)
+        visited.add(node.id)
+        for n, action in node.get_successors():
+            if n.id not in visited or n.id not in fringe:
+                log['nvextex_explored_(with_duplicates)'] += 1
+                total_cost = cost + n.g_score
+                fringe.put((total_cost, n))
 
-
-
-
-
+    raise RuntimeError('No solution!')
 
 
 
@@ -236,9 +240,9 @@ def main(arglist):
     start = Node(game_map)
     end = Goal(game_map)
 
-    print(astar(start, end))
+    print(ucs(start, end))
 
-    #
+
     # node_list = []
     # for i in start.get_successors():
     #     h = i[0].get_successors()

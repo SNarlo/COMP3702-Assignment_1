@@ -1,11 +1,11 @@
 68
 3.5
 ########
-#TIIF ##
-##WWW ##
-#WWWW W#
-#WTW  W#
-##WWWWW#
+#TIIF###
+##WWWW##
+#WWWWWW#
+#WTWW W#
+##WW   #
 ####   #
 ##### ##
 # B BB##

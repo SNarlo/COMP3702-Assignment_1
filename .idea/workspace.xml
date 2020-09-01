@@ -17,8 +17,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/solver.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="195">
-              <caret line="187" column="22" selection-start-line="187" selection-start-column="22" selection-end-line="187" selection-end-column="22" />
+            <state relative-caret-position="152">
+              <caret line="195" selection-start-line="195" selection-end-line="195" />
               <folding>
                 <element signature="e#18#28#0" expanded="true" />
               </folding>
@@ -29,8 +29,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/laser_tank.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-6063">
-              <caret line="93" column="154" selection-start-line="93" selection-start-column="17" selection-end-line="93" selection-end-column="154" />
+            <state relative-caret-position="251">
+              <caret line="164" selection-start-line="164" selection-end-line="164" />
               <folding>
                 <element signature="e#0#10#0" expanded="true" />
               </folding>
@@ -41,8 +41,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/testcases/t1_bridgeport.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="60">
-              <caret line="4" column="6" selection-start-line="4" selection-start-column="6" selection-end-line="4" selection-end-column="6" />
+            <state relative-caret-position="90">
+              <caret line="6" column="6" selection-start-line="6" selection-start-column="6" selection-end-line="6" selection-end-column="6" />
             </state>
           </provider>
         </entry>
@@ -224,7 +224,8 @@
       <workItem from="1598334440441" duration="4456000" />
       <workItem from="1598355916903" duration="24972000" />
       <workItem from="1598582045824" duration="33857000" />
-      <workItem from="1598769185091" duration="17921000" />
+      <workItem from="1598769185091" duration="28119000" />
+      <workItem from="1598935708998" duration="7072000" />
     </task>
     <task id="LOCAL-00001" summary="No features added">
       <created>1598356040611</created>
@@ -345,11 +346,18 @@
       <option name="project" value="LOCAL" />
       <updated>1598871794758</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="Started UCS">
+      <created>1598878191202</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1598878191202</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="84254000" />
+    <option name="totallyTimeSpent" value="101524000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -361,16 +369,15 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="726" y="0" width="714" height="900" extended-state="0" />
+    <frame x="680" y="0" width="760" height="900" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.20386904" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.09749304" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
-      <window_info anchor="bottom" id="Concurrent Activities Diagram" weight="0.32891566" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.49931225" visible="true" weight="0.3698795" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.49931225" visible="true" weight="0.41566265" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.3987952" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -381,11 +388,13 @@
       <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.5007153" side_tool="true" weight="0.32771084" />
       <window_info anchor="bottom" id="Terminal" order="11" weight="0.773494" />
       <window_info anchor="bottom" id="Python Console" order="12" weight="0.32771084" />
+      <window_info anchor="bottom" id="Concurrent Activities Diagram" order="13" show_stripe_button="false" weight="0.32891566" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="right" id="SciView" order="3" />
       <window_info anchor="right" id="Database" order="4" />
+      <window_info anchor="right" id="Coverage" order="5" side_tool="true" />
     </layout>
     <layout-to-restore>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.13018598" />
@@ -479,11 +488,12 @@
     <MESSAGE value="Got pos to work again by reverting to older version" />
     <MESSAGE value="Getting somewhat closer to a result" />
     <MESSAGE value="Getting some results, not working fully though" />
-    <option name="LAST_COMMIT_MESSAGE" value="Getting some results, not working fully though" />
+    <MESSAGE value="Started UCS" />
+    <option name="LAST_COMMIT_MESSAGE" value="Started UCS" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Assignment1_LaserTank$laser_tank.coverage" NAME="laser_tank Coverage Results" MODIFIED="1598248873954" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/Assignment1_LaserTank$solver.coverage" NAME="solver Coverage Results" MODIFIED="1598877727225" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Assignment1_LaserTank$solver.coverage" NAME="solver Coverage Results" MODIFIED="1598961705462" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Assignment1_LaserTank$tester.coverage" NAME="tester Coverage Results" MODIFIED="1598248636760" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Assignment1_LaserTank$path_visualiser.coverage" NAME="path_visualiser Coverage Results" MODIFIED="1598249372554" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
@@ -525,13 +535,7 @@
         <state relative-caret-position="-731" />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/testcases/foo.txt">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/testcases/t3_labyrinth.txt">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/testcases/t1_crossfire.txt">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$APPLICATION_HOME_DIR$/helpers/pydev/_pydev_imps/_pydev_execfile.py">
@@ -555,20 +559,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file:///Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/codecs.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="371">
-          <caret line="324" selection-start-line="324" selection-end-line="324" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file:///Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/_bootlocale.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="369">
-          <caret line="45" selection-start-line="45" selection-end-line="45" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$APPLICATION_HOME_DIR$/helpers/pydev/pydevd.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="585">
@@ -582,10 +572,37 @@
     <entry file="file://$PROJECT_DIR$/testcases/t2_brickyard.txt">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
+    <entry file="file://$USER_HOME$/Library/Caches/PyCharm2019.1/python_stubs/-1199943126/builtins.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="161">
+          <caret line="741" column="8" selection-start-line="741" selection-start-column="8" selection-end-line="741" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/_bootlocale.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="369">
+          <caret line="45" selection-start-line="45" selection-end-line="45" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file:///Library/Frameworks/Python.framework/Versions/3.7/lib/python3.7/codecs.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="371">
+          <caret line="324" selection-start-line="324" selection-end-line="324" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/testcases/t1_crossfire.txt">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/testcases/foo.txt">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
     <entry file="file://$PROJECT_DIR$/laser_tank.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-6063">
-          <caret line="93" column="154" selection-start-line="93" selection-start-column="17" selection-end-line="93" selection-end-column="154" />
+        <state relative-caret-position="251">
+          <caret line="164" selection-start-line="164" selection-end-line="164" />
           <folding>
             <element signature="e#0#10#0" expanded="true" />
           </folding>
@@ -594,22 +611,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/testcases/t1_bridgeport.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="4" column="6" selection-start-line="4" selection-start-column="6" selection-end-line="4" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/Library/Caches/PyCharm2019.1/python_stubs/-1199943126/builtins.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="263">
-          <caret line="741" column="8" selection-start-line="741" selection-start-column="8" selection-end-line="741" selection-end-column="8" />
+        <state relative-caret-position="90">
+          <caret line="6" column="6" selection-start-line="6" selection-start-column="6" selection-end-line="6" selection-end-column="6" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/solver.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="195">
-          <caret line="187" column="22" selection-start-line="187" selection-start-column="22" selection-end-line="187" selection-end-column="22" />
+        <state relative-caret-position="152">
+          <caret line="195" selection-start-line="195" selection-end-line="195" />
           <folding>
             <element signature="e#18#28#0" expanded="true" />
           </folding>
