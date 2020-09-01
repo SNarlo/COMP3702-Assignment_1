@@ -183,8 +183,6 @@ def astar(start, end):
 
 
 def ucs(start, goal):
-
-
     log = dict()
     log['nvextex_explored_(with_duplicates)'] = 0
     visited = set()
@@ -200,11 +198,13 @@ def ucs(start, goal):
             return log
 
         visited.add(node.id)
+        node.render()
+
         for n, action in node.get_successors():
             if n.id not in visited or n.id not in fringe:
                 log['nvextex_explored_(with_duplicates)'] += 1
-                total_cost = cost + n.g_score
-                fringe.put((total_cost, n))
+                total_cost = cost + n.g_score + 1
+                fringe.put((n, total_cost))
 
     raise RuntimeError('No solution!')
 
