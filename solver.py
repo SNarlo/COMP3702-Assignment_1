@@ -21,14 +21,7 @@ COMP3702 2020 Assignment 1 Support Code
 # Code for any classes or functions you need can go here.
 #
 #
-#
-# input_file = arglist[0]
-# output_file = arglist[1]
-#
-#
-#
-# # Read the input testcase file
-# game_map = LaserTankMap.process_input_file(input_file)
+
 
 
 class Node(LaserTankMap):
@@ -46,7 +39,6 @@ class Node(LaserTankMap):
         self.id = hash((self.pos[0], self.pos[1], self.player_heading))
         super().__init__(x_size=state.x_size, y_size=state.y_size, grid_data=state.grid_data,
                          player_heading=state.player_heading, player_x=state.player_x, player_y=state.player_y)
-
 
 
     def __get_end_point(self):
@@ -167,7 +159,7 @@ def astar(start, end):
         current = queue.get()
         if current.pos == end.pos:
             log['no_vertex_in_queue_at_termination'] = queue.qsize()
-            log['no_vertex_explored'] = len(explored)
+            log['nodes_explored'] = len(explored)
             log['action_path'] = path[current.id]
             log['path_length'] = len(path[current.id])
             log['solution_path'] = explored[current.id]
@@ -195,7 +187,7 @@ def ucs(start, goal):
 
     begin_clock = time.time()
     log = dict()
-    log['nvextex_explored_(with_duplicates)'] = 0
+    log['nodes_explored'] = 0
     path = {start.id: []}
     visited = set()
     fringe = PriorityQueue()
@@ -206,7 +198,7 @@ def ucs(start, goal):
 
         visited.add(node.id)
 
-        log['nvextex_explored_(with_duplicates)'] += 1
+        log['nodes_explored'] += 1
 
         if node.pos == goal.pos:
             log['path_length'] = len(path[node.id])
@@ -239,10 +231,10 @@ def write_output_file(filename, actions):
 
 
 def main(arglist):
-    # input_file = arglist[0]
-    # output_file = arglist[1]
-    input_file = "testcases/t0_simple_maze.txt"
-    output_file = "testcases/foo.txt"
+    input_file = arglist[0]
+    output_file = arglist[1]
+    # input_file = "testcases/t2_shortcut.txt"
+    # output_file = "testcases/foo.txt"
 
     # Read the input testcase file
     game_map = LaserTankMap.process_input_file(input_file)
