@@ -21,18 +21,21 @@ COMP3702 2020 Assignment 1 Support Code
 # Code for any classes or functions you need can go here.
 #
 #
-input_file = "testcases/t2_brickyard.txt" # TODO Change this back to arglist[0]
-output_file = "testcases/foo.txt"
-
-# Read the input testcase file
-game_map = LaserTankMap.process_input_file(input_file)
+#
+# input_file = arglist[0]
+# output_file = arglist[1]
+#
+#
+#
+# # Read the input testcase file
+# game_map = LaserTankMap.process_input_file(input_file)
 
 
 class Node(LaserTankMap):
 
     def __init__(self, state):
         self.state = state
-        self._start_point = (game_map.player_y, game_map.player_x)
+        self._start_point = (state.player_y, state.player_x)
         self.end_point = self.__get_end_point()
         self.pos = self.__get_player_pos()
         self.successors = self.get_successors
@@ -40,7 +43,7 @@ class Node(LaserTankMap):
         self.g_score = 0
         self.h_score = self.heuristic('manhattan')
         self.f_score = 0
-        self.id = hash(self.state)
+        self.id = hash((self.pos[0], self.pos[1], self.player_heading))
         super().__init__(x_size=state.x_size, y_size=state.y_size, grid_data=state.grid_data,
                          player_heading=state.player_heading, player_x=state.player_x, player_y=state.player_y)
 
@@ -86,17 +89,17 @@ class Node(LaserTankMap):
         else:
             raise NotImplementedError(mode)
         return h_score_estimate
-
-    def get_g_score(self):
-        """
-        This is the distance from the starting position
-        :param state: The current state the map is in
-        :return: The distance from the start position
-        """
-        g_score = abs(self.pos[0] - game_map.player_y)
-        g_score += abs(self.pos[1] - game_map.player_x)
-
-        return g_score
+    #
+    # def get_g_score(self):
+    #     """
+    #     This is the distance from the starting position
+    #     :param state: The current state the map is in
+    #     :return: The distance from the start position
+    #     """
+    #     g_score = abs(self.pos[0] - game_map.player_y)
+    #     g_score += abs(self.pos[1] - game_map.player_x)
+    #
+    #     return g_score
 
     def create_copy(self):
         """
@@ -128,8 +131,8 @@ class Node(LaserTankMap):
     # def __gt__(self, other):
     #     return self.g_score > other.g_score
 
-    # def __lt__(self, other):
-    #     return self.g_score > other.g_score
+    def __lt__(self, other):
+        return self.g_score < other.g_score
 
     # def __eq__(self, other):
     #     return self.g_score == other.g_score
@@ -189,33 +192,35 @@ def astar(start, end):
 
 
 def ucs(start, goal):
+
+    begin_clock = time.time()
     log = dict()
     log['nvextex_explored_(with_duplicates)'] = 0
     path = {start.id: []}
     visited = set()
-    fringe = queuelib.Queue()
+    fringe = PriorityQueue()
     fringe.put((start, start.g_score))
 
     while not fringe.empty():
         node, cost = fringe.get()
 
-        visited.add(node.state)
+        visited.add(node.id)
+
+        log['nvextex_explored_(with_duplicates)'] += 1
 
         if node.pos == goal.pos:
             log['path_length'] = len(path[node.id])
             log['action_path'] = path[node.id]
+            log['elapsed_time_in_minutes'] = ((time.time()) - begin_clock)
             return log
 
         for n, action in node.get_successors():
-            if n.state not in visited:
-                log['nvextex_explored_(with_duplicates)'] += 1
+            if n.id not in visited:
                 path[n.id] = path[node.id] + [action]
                 n.g_score = node.g_score + 1
                 fringe.put((n, n.g_score))
 
     raise RuntimeError('No solution!')
-
-
 
 
 def write_output_file(filename, actions):
@@ -234,7 +239,9 @@ def write_output_file(filename, actions):
 
 
 def main(arglist):
-    input_file = "testcases/t2_brickyard.txt" # TODO Change this back to arglist[0]
+    # input_file = arglist[0]
+    # output_file = arglist[1]
+    input_file = "testcases/t0_simple_maze.txt"
     output_file = "testcases/foo.txt"
 
     # Read the input testcase file
@@ -246,17 +253,12 @@ def main(arglist):
     start = Node(game_map)
     end = Goal(game_map)
 
-    print(ucs(start, end))
+    ucs_solution = (ucs(start, end))
+    print(ucs_solution)
 
+    for i in ucs_solution:
+        actions.append(i)
 
-    # node_list = []
-    # for i in start.get_successors():
-    #     h = i[0].get_successors()
-    #     node_list.append(h)
-    #
-    # for j in node_list:
-    #     for s in j:
-    #         print(s[0].h_score)
 
 
 
