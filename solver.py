@@ -33,7 +33,7 @@ class Node(LaserTankMap):
         self.pos = self.__get_player_pos()
         self.successors = self.get_successors
         self.player_heading = state.player_heading
-        self.g_score = 0
+        self.cost = 0
         self.h_score = self.heuristic('manhattan')
         self.f_score = 0
         self.id = hash((self.pos[0], self.pos[1], self.player_heading))
@@ -124,7 +124,7 @@ class Node(LaserTankMap):
     #     return self.g_score > other.g_score
 
     def __lt__(self, other):
-        return self.g_score < other.g_score
+        return self.cost < other.cost
 
     # def __eq__(self, other):
     #     return self.g_score == other.g_score
@@ -191,26 +191,25 @@ def ucs(start, goal):
     path = {start.id: []}
     visited = set()
     fringe = PriorityQueue()
-    fringe.put((start, start.g_score))
+    fringe.put((start, start.cost))
 
     while not fringe.empty():
         node, cost = fringe.get()
 
         visited.add(node.id)
-
         log['nodes_explored'] += 1
 
         if node.pos == goal.pos:
             log['path_length'] = len(path[node.id])
             log['action_path'] = path[node.id]
             log['elapsed_time_in_minutes'] = ((time.time()) - begin_clock)
-            return log
+            return log["action_path"]
 
         for n, action in node.get_successors():
             if n.id not in visited:
                 path[n.id] = path[node.id] + [action]
-                n.g_score = node.g_score + 1
-                fringe.put((n, n.g_score))
+                n.cost = node.cost + 1
+                fringe.put((n, n.cost))
 
     raise RuntimeError('No solution!')
 
@@ -233,8 +232,8 @@ def write_output_file(filename, actions):
 def main(arglist):
     input_file = arglist[0]
     output_file = arglist[1]
-    # input_file = "testcases/t2_shortcut.txt"
-    # output_file = "testcases/foo.txt"
+    # input_file = "testcases/t3_labyrinth.txt"
+    # output_file = "testcases/output.txt"
 
     # Read the input testcase file
     game_map = LaserTankMap.process_input_file(input_file)
