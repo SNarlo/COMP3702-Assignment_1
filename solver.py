@@ -21,7 +21,7 @@ COMP3702 2020 Assignment 1 Support Code
 # Code for any classes or functions you need can go here.
 #
 #
-input_file = "testcases/t0_simple_maze.txt" # TODO Change this back to arglist[0]
+input_file = "testcases/t2_brickyard.txt" # TODO Change this back to arglist[0]
 output_file = "testcases/foo.txt"
 
 # Read the input testcase file
@@ -37,10 +37,10 @@ class Node(LaserTankMap):
         self.pos = self.__get_player_pos()
         self.successors = self.get_successors
         self.player_heading = state.player_heading
-        self.g_score = self.get_g_score()
+        self.g_score = 0
         self.h_score = self.heuristic('manhattan')
         self.f_score = 0
-        self.id = self.state
+        self.id = hash(self.state)
         super().__init__(x_size=state.x_size, y_size=state.y_size, grid_data=state.grid_data,
                          player_heading=state.player_heading, player_x=state.player_x, player_y=state.player_y)
 
@@ -61,9 +61,9 @@ class Node(LaserTankMap):
             index += 1
 
         index = expanded.index('F')
+        width_index = (self.state.grid_data[index % length]).index('F')
 
-
-        return index % length, math.floor(index/width)
+        return index % length, width_index
 
     def __get_player_pos(self):
         """
@@ -98,7 +98,6 @@ class Node(LaserTankMap):
 
         return g_score
 
-
     def create_copy(self):
         """
         This function copy's the game board
@@ -112,8 +111,8 @@ class Node(LaserTankMap):
 
     def get_successors(self):
         """
-        This function gets all the elements that are surrounding
-        the player in terms of U, D, L, R in the direction the tank is facing
+        This function gets all the nodes that are surrounding
+        the player
         """
         successors = []
 
@@ -126,11 +125,14 @@ class Node(LaserTankMap):
 
         return successors
 
-    def __lt__(self, other):
-        return self.h_score < other.h_score
+    # def __gt__(self, other):
+    #     return self.g_score > other.g_score
+
+    # def __lt__(self, other):
+    #     return self.g_score > other.g_score
 
     # def __eq__(self, other):
-    #     return self.id == other.id
+    #     return self.g_score == other.g_score
 
 
 class Goal(Node):
@@ -169,17 +171,19 @@ def astar(start, end):
             log['elapsed_time_in_minutes'] = (time.time()) - begin_clock / 60
             return log
 
+        explored[current.id] = current.g_score
+
         for neighbour, action in current.get_successors():  # getting all the neighbours of the current node
             neighbour.g_score = current.g_score + 1
-            cost_so_far = explored[current.id] + current.g_score # updating the cost so far to be the total of all the nodes explored
+         # updating the cost so far to be the total of all the nodes explored
 
-            if (neighbour.id not in explored) or (cost_so_far < explored[neighbour.id]): # if the neighbour is not in explored or if the total g score is less than the neighbors g_score
-                explored[neighbour.id] = cost_so_far  # add it and make its cost to be the total cost so far
+            if (neighbour.id not in explored) or (neighbour.g_score < explored[neighbour.id]): # if the neighbour is not in explored or if the total g score is less than the neighbors g_score
+                explored[neighbour.id] = neighbour.g_score  # add it and make its cost to be the total cost so far
                 path[neighbour.id] = path[current.id] + [action] # update the path
                 log['no_vertex_explored'] += 1 # add vertex to the total
-                neighbour.f_score = cost_so_far + neighbour.h_score
+                neighbour.f_score = neighbour.h_score + neighbour.g_score
+                neighbour.render()
                 queue.put(neighbour)
-
 
     raise RuntimeError('No Solution')
 
@@ -194,26 +198,22 @@ def ucs(start, goal):
 
     while not fringe.empty():
         node, cost = fringe.get()
-        
-        visited.add(node)
+
+        visited.add(node.state)
 
         if node.pos == goal.pos:
             log['path_length'] = len(path[node.id])
             log['action_path'] = path[node.id]
             return log
 
-        print(node.pos, goal.pos)
-
         for n, action in node.get_successors():
-            if n.id not in visited or node.id not in fringe:
+            if n.state not in visited:
                 log['nvextex_explored_(with_duplicates)'] += 1
                 path[n.id] = path[node.id] + [action]
-                total_cost = cost + n.g_score + 1
-                fringe.put((n, total_cost))
-
+                n.g_score = node.g_score + 1
+                fringe.put((n, n.g_score))
 
     raise RuntimeError('No solution!')
-
 
 
 
@@ -234,7 +234,7 @@ def write_output_file(filename, actions):
 
 
 def main(arglist):
-    input_file = "testcases/t0_simple_maze.txt" # TODO Change this back to arglist[0]
+    input_file = "testcases/t2_brickyard.txt" # TODO Change this back to arglist[0]
     output_file = "testcases/foo.txt"
 
     # Read the input testcase file
