@@ -25,7 +25,6 @@ COMP3702 2020 Assignment 1 Support Code
 
 
 class Node(LaserTankMap):
-
     def __init__(self, state):
         self.state = state
         self._start_point = (state.player_y, state.player_x)
@@ -35,10 +34,21 @@ class Node(LaserTankMap):
         self.player_heading = state.player_heading
         self.cost = 0
         self.h_score = self.heuristic('manhattan')
-        self.f_score = 0
-        self.id = hash((self.pos[0], self.pos[1], self.player_heading))
+        self.g_score = 0
+        self.grid = hash(self.get_hash_grid())
+        self.id = hash((self.pos[0], self.pos[1], self.player_heading, self.grid)) # all the elements that change with moves
         super().__init__(x_size=state.x_size, y_size=state.y_size, grid_data=state.grid_data,
                          player_heading=state.player_heading, player_x=state.player_x, player_y=state.player_y)
+
+    def get_hash_grid(self): # converts the grid data map into a tuple of tuples in order allow hashing
+
+        i = 0
+        tuplised = []
+        while i < len(self.state.grid_data):
+            tuplised.append(tuple(self.state.grid_data[i]))
+            i += 1
+
+        return tuple(tuplised)
 
 
     def __get_end_point(self):
@@ -50,7 +60,7 @@ class Node(LaserTankMap):
         width = len(self.state.grid_data[0])
         expanded = []
         index = 0
-        while index < len(self.state.grid_data[0]):
+        while index < width:
             for i in self.state.grid_data:
                 expanded.append(i[index])
             index += 1
@@ -81,17 +91,7 @@ class Node(LaserTankMap):
         else:
             raise NotImplementedError(mode)
         return h_score_estimate
-    #
-    # def get_g_score(self):
-    #     """
-    #     This is the distance from the starting position
-    #     :param state: The current state the map is in
-    #     :return: The distance from the start position
-    #     """
-    #     g_score = abs(self.pos[0] - game_map.player_y)
-    #     g_score += abs(self.pos[1] - game_map.player_x)
-    #
-    #     return g_score
+
 
     def create_copy(self):
         """
@@ -126,8 +126,8 @@ class Node(LaserTankMap):
     def __lt__(self, other):
         return self.cost < other.cost
 
-    # def __eq__(self, other):
-    #     return self.g_score == other.g_score
+    def __eq__(self, other):
+        return self.id == other.id
 
 
 class Goal(Node):
@@ -147,38 +147,32 @@ def astar(start, end):
     """
     begin_clock = time.time()
     log = dict()
-    log['no_vertex_explored'] = 0
+    log['nodes_explored'] = 0
 
-    queue = PriorityQueue()
-    queue.put(start)
-    explored = {start.id: start.g_score} # a disctionary of vertex: f_score
+    frontier = PriorityQueue()
+    frontier.put(start)
+    explored = set()
     path = {start.id: []}
-    log['no_vertex_explored'] += 1
 
-    while not queue.empty():
-        current = queue.get()
+    while not frontier.empty():
+        current = frontier.get()
+
+        explored.add(current.id)
+        log['nodes_explored'] += 1
+
         if current.pos == end.pos:
-            log['no_vertex_in_queue_at_termination'] = queue.qsize()
-            log['nodes_explored'] = len(explored)
             log['action_path'] = path[current.id]
             log['path_length'] = len(path[current.id])
-            log['solution_path'] = explored[current.id]
-            log['elapsed_time_in_minutes'] = (time.time()) - begin_clock / 60
-            return log
-
-        explored[current.id] = current.g_score
+            log['elapsed_time_in_minutes'] = ((time.time()) - begin_clock)
+            return log["action_path"], log['elapsed_time_in_minutes']
 
         for neighbour, action in current.get_successors():  # getting all the neighbours of the current node
-            neighbour.g_score = current.g_score + 1
-         # updating the cost so far to be the total of all the nodes explored
-
-            if (neighbour.id not in explored) or (neighbour.g_score < explored[neighbour.id]): # if the neighbour is not in explored or if the total g score is less than the neighbors g_score
-                explored[neighbour.id] = neighbour.g_score  # add it and make its cost to be the total cost so far
+            if neighbour.id not in explored: # if the neighbour is not in explored or if the total g score is less than the neighbors g_score
+                neighbour.g_score = current.g_score + 1
                 path[neighbour.id] = path[current.id] + [action] # update the path
-                log['no_vertex_explored'] += 1 # add vertex to the total
-                neighbour.f_score = neighbour.h_score + neighbour.g_score
-                neighbour.render()
-                queue.put(neighbour)
+                log['nodes_explored'] += 1 # add vertex to the total
+                neighbour.cost = neighbour.h_score + neighbour.g_score
+                frontier.put(neighbour)
 
     raise RuntimeError('No Solution')
 
@@ -191,25 +185,26 @@ def ucs(start, goal):
     path = {start.id: []}
     visited = set()
     fringe = PriorityQueue()
-    fringe.put((start, start.cost))
+    fringe.put(start)
 
     while not fringe.empty():
-        node, cost = fringe.get()
+        node = fringe.get()
 
         visited.add(node.id)
         log['nodes_explored'] += 1
 
+        node.render()
         if node.pos == goal.pos:
             log['path_length'] = len(path[node.id])
             log['action_path'] = path[node.id]
             log['elapsed_time_in_minutes'] = ((time.time()) - begin_clock)
-            return log["action_path"]
+            return log["action_path"], log['elapsed_time_in_minutes']
 
         for n, action in node.get_successors():
             if n.id not in visited:
                 path[n.id] = path[node.id] + [action]
                 n.cost = node.cost + 1
-                fringe.put((n, n.cost))
+                fringe.put(n)
 
     raise RuntimeError('No solution!')
 
@@ -230,10 +225,10 @@ def write_output_file(filename, actions):
 
 
 def main(arglist):
-    input_file = arglist[0]
-    output_file = arglist[1]
-    # input_file = "testcases/t3_labyrinth.txt"
-    # output_file = "testcases/output.txt"
+    # input_file = arglist[0]
+    # output_file = arglist[1]
+    input_file = "testcases/t1_crossfire.txt"
+    output_file = "testcases/output.txt"
 
     # Read the input testcase file
     game_map = LaserTankMap.process_input_file(input_file)
@@ -244,7 +239,7 @@ def main(arglist):
     start = Node(game_map)
     end = Goal(game_map)
 
-    ucs_solution = (ucs(start, end))
+    ucs_solution = (astar(start, end))
     print(ucs_solution)
 
     for i in ucs_solution:
