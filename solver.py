@@ -15,13 +15,11 @@ Template file for you to implement your solution to Assignment 1.
 COMP3702 2020 Assignment 1 Support Code
 """
 
-
 #
 #
 # Code for any classes or functions you need can go here.
 #
 #
-
 
 
 class Node(LaserTankMap):
@@ -41,7 +39,6 @@ class Node(LaserTankMap):
                          player_heading=state.player_heading, player_x=state.player_x, player_y=state.player_y)
 
     def get_hash_grid(self): # converts the grid data map into a tuple of tuples in order allow hashing
-
         i = 0
         tuplised = []
         while i < len(self.state.grid_data):
@@ -49,7 +46,6 @@ class Node(LaserTankMap):
             i += 1
 
         return tuple(tuplised)
-
 
     def __get_end_point(self):
         """
@@ -77,7 +73,6 @@ class Node(LaserTankMap):
         """
         return self.state.player_y, self.state.player_x
 
-
     def heuristic(self, mode):
         """
         The heuristic function
@@ -91,7 +86,6 @@ class Node(LaserTankMap):
         else:
             raise NotImplementedError(mode)
         return h_score_estimate
-
 
     def create_copy(self):
         """
@@ -121,14 +115,13 @@ class Node(LaserTankMap):
         return successors
 
     # def __gt__(self, other):
-    #     return self.g_score > other.g_score
+    #     return self.cost > other.cost
 
     def __lt__(self, other):
         return self.cost < other.cost
 
     def __eq__(self, other):
         return self.id == other.id
-
 
 class Goal(Node):
     def __init__(self, state):
@@ -160,11 +153,12 @@ def astar(start, end):
         explored.add(current.id)
         log['nodes_explored'] += 1
 
-        if current.pos == end.pos:
+        if current.pos == end.pos: # calculate these when the end is found
             log['action_path'] = path[current.id]
             log['path_length'] = len(path[current.id])
-            log['elapsed_time_in_minutes'] = ((time.time()) - begin_clock)
-            return log["action_path"], log['elapsed_time_in_minutes']
+            log['nodes_in_fringe_at_termination'] = frontier.qsize()
+            log['elapsed_time_in_seconds'] = ((time.time()) - begin_clock)
+            return log
 
         for neighbour, action in current.get_successors():  # getting all the neighbours of the current node
             if neighbour.id not in explored: # if the neighbour is not in explored or if the total g score is less than the neighbors g_score
@@ -193,12 +187,12 @@ def ucs(start, goal):
         visited.add(node.id)
         log['nodes_explored'] += 1
 
-        node.render()
         if node.pos == goal.pos:
+            # log['action_path'] = path[node.id]
             log['path_length'] = len(path[node.id])
-            log['action_path'] = path[node.id]
-            log['elapsed_time_in_minutes'] = ((time.time()) - begin_clock)
-            return log["action_path"], log['elapsed_time_in_minutes']
+            log['nodes_in_fringe_at_termination'] = fringe.qsize()
+            log['elapsed_time_in_seconds'] = ((time.time()) - begin_clock)
+            return log
 
         for n, action in node.get_successors():
             if n.id not in visited:
@@ -227,7 +221,7 @@ def write_output_file(filename, actions):
 def main(arglist):
     # input_file = arglist[0]
     # output_file = arglist[1]
-    input_file = "testcases/t1_crossfire.txt"
+    input_file = "testcases/t3_labyrinth.txt"
     output_file = "testcases/output.txt"
 
     # Read the input testcase file
@@ -239,15 +233,11 @@ def main(arglist):
     start = Node(game_map)
     end = Goal(game_map)
 
-    ucs_solution = (astar(start, end))
-    print(ucs_solution)
+    solution = (astar(start, end))
+    print(solution)
 
-    for i in ucs_solution:
+    for i in solution:
         actions.append(i)
-
-
-
-
 
 
     #
