@@ -1,10 +1,10 @@
 import sys
 import os.path
 import math
-from robot_config import RobotConfig, make_robot_config_from_ee1
-from problem_spec import ProblemSpec
-from obstacle import Obstacle
-from angle import Angle
+from Assignment2.robot_config import RobotConfig, make_robot_config_from_ee1
+from Assignment2.problem_spec import ProblemSpec
+from Assignment2.obstacle import Obstacle
+from Assignment2.angle import Angle
 
 """
 Tester script.
@@ -259,8 +259,11 @@ def test_grapple_commonality(c1, c2, spec):
 
 
 def main(arglist):
-    input_file = arglist[0]
-    soln_file = arglist[1]
+    # input_file = arglist[0]
+    # soln_file = arglist[1]
+
+    input_file = "testcases/3g1_m0.txt"
+    soln_file = "testcases/output.txt"
 
     if not os.path.exists(soln_file):
         print("!!! No solution file found !!!")

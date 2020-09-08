@@ -1,8 +1,8 @@
 import sys
 
-from problem_spec import ProblemSpec
-from robot_config import write_robot_config_list_to_file
-from tester import test_config_equality
+from Assignment2.problem_spec import ProblemSpec
+from Assignment2.robot_config import write_robot_config_list_to_file
+from Assignment2.tester import test_config_equality
 
 """
 Template file for you to implement your solution to Assignment 2. Contains a class you can use to represent graph nodes,
@@ -88,8 +88,11 @@ def find_graph_path(spec, init_node):
 
 
 def main(arglist):
-    input_file = arglist[0]
-    output_file = arglist[1]
+    # input_file = arglist[0]
+    # output_file = arglist[1]
+
+    input_file = "testcases/3g1_m0.txt"
+    output_file = "testcases/output.txt"
 
     spec = ProblemSpec(input_file)
 
@@ -115,7 +118,7 @@ def main(arglist):
     # You may uncomment this line to launch visualiser once a solution has been found. This may be useful for debugging.
     # *** Make sure this line is commented out when you submit to Gradescope ***
     #
-    #v = Visualiser(spec, steps)
+    # v = Visualiser(spec, steps)
 
 
 if __name__ == '__main__':

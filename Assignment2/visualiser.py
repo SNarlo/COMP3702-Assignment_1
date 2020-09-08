@@ -1,8 +1,8 @@
 import sys
 import math
 import tkinter as tk
-from problem_spec import ProblemSpec
-from tester import load_output
+from Assignment2.problem_spec import ProblemSpec
+from Assignment2.tester import load_output
 # from tester import *
 
 """

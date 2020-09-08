@@ -1,7 +1,7 @@
 import sys
-from robot_config import make_robot_config_from_ee1, make_robot_config_from_ee2
-from obstacle import Obstacle
-from angle import Angle
+from Assignment2.robot_config import make_robot_config_from_ee1, make_robot_config_from_ee2
+from Assignment2.obstacle import Obstacle
+from Assignment2.angle import Angle
 
 
 class ProblemSpec:
