@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="c5265009-853d-46c1-9933-23f30ec5113b" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/solver.py" beforeDir="false" afterPath="$PROJECT_DIR$/solver.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -16,7 +15,7 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/solver.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="25">
+            <state relative-caret-position="385">
               <caret line="223" column="40" selection-start-line="223" selection-start-column="40" selection-end-line="223" selection-end-column="40" />
               <folding>
                 <element signature="e#18#28#0" expanded="true" />
@@ -208,7 +207,7 @@
       <workItem from="1599099874378" duration="4560000" />
       <workItem from="1599118267116" duration="560000" />
       <workItem from="1599122297394" duration="2125000" />
-      <workItem from="1599138258546" duration="2381000" />
+      <workItem from="1599138258546" duration="2573000" />
     </task>
     <task id="LOCAL-00001" summary="No features added">
       <created>1598356040611</created>
@@ -399,11 +398,18 @@
       <option name="project" value="LOCAL" />
       <updated>1599116390215</updated>
     </task>
-    <option name="localTasksCounter" value="28" />
+    <task id="LOCAL-00028" summary="Finished">
+      <created>1599189051534</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1599189051534</updated>
+    </task>
+    <option name="localTasksCounter" value="29" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="140071000" />
+    <option name="totallyTimeSpent" value="140263000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -416,20 +422,19 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
-    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2274678" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32891566" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.49931225" visible="true" weight="0.30240965" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49931225" weight="0.30240965" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.3987952" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="Docker" order="6" show_stripe_button="false" />
       <window_info anchor="bottom" id="TODO" order="7" weight="0.32891566" />
-      <window_info anchor="bottom" id="Terminal" order="8" weight="0.42168674" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="8" visible="true" weight="0.42168674" />
       <window_info anchor="bottom" id="Database Changes" order="9" />
       <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.5007153" side_tool="true" weight="0.32771084" />
       <window_info anchor="bottom" id="Version Control" order="11" sideWeight="0.49928468" weight="0.32771084" />
@@ -545,7 +550,8 @@
     <MESSAGE value="Made UCS work by making the hash object a combination of the y, x and &#10;heading of the player." />
     <MESSAGE value="UCS works, Astar now" />
     <MESSAGE value="Got a more efficient id, the id is a hash of all the elements that &#10;change with every move (pos, heading, grid). All tests almost working!" />
-    <option name="LAST_COMMIT_MESSAGE" value="Got a more efficient id, the id is a hash of all the elements that &#10;change with every move (pos, heading, grid). All tests almost working!" />
+    <MESSAGE value="Finished" />
+    <option name="LAST_COMMIT_MESSAGE" value="Finished" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Assignment1_LaserTank$laser_tank.coverage" NAME="laser_tank Coverage Results" MODIFIED="1598248873954" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
@@ -661,9 +667,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/testcases/t1_ice_maze.txt">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/testcases/t1_bridgeport.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="150">
@@ -684,13 +687,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/testcases/t3_labyrinth.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="175">
-          <caret line="19" column="14" lean-forward="true" selection-start-line="19" selection-start-column="13" selection-end-line="19" selection-end-column="14" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/testcases/output.txt">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -701,9 +697,19 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/testcases/t1_ice_maze.txt">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/testcases/t3_labyrinth.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="285">
+          <caret line="19" column="14" lean-forward="true" selection-start-line="19" selection-start-column="13" selection-end-line="19" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/solver.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="25">
+        <state relative-caret-position="385">
           <caret line="223" column="40" selection-start-line="223" selection-start-column="40" selection-end-line="223" selection-end-column="40" />
           <folding>
             <element signature="e#18#28#0" expanded="true" />
