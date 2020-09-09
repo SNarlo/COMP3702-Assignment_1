@@ -1,0 +1,1 @@
+nodes_explored,action_path,path_length,nodes_in_fringe_at_termination,elapsed_time_in_seconds
