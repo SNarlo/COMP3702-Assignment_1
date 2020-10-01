@@ -221,7 +221,7 @@ def write_output_file(filename, actions):
 def main(arglist):
     # input_file = arglist[0]
     # output_file = arglist[1]
-    input_file = "testcases/t3_labyrinth.txt"
+    input_file = "testcases/t2_brickyard.txt"
     output_file = "testcases/output.txt"
 
     # Read the input testcase file
